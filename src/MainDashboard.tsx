@@ -196,6 +196,7 @@ const MainDashboard = () => {
     isSearchOpen,
     setIsSearchOpen,
     addToast,
+    lastTransaction,
   } = useAppStore();
 
   const filteredCrimes = useFilteredCrimes();
@@ -267,7 +268,10 @@ const MainDashboard = () => {
         setIsSearchOpen(false);
         setIsLeaderboardOpen(false);
         setIsStatsOpen(false);
-        setSelectedCrime(null);
+        // Don't close the crime panel if transaction modal is visible
+        if (!lastTransaction) {
+          setSelectedCrime(null);
+        }
         if (documentaryMode) {
           setDocumentaryMode(false);
           setDocumentaryProgress(0);
@@ -325,7 +329,7 @@ const MainDashboard = () => {
 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [documentaryMode, selectedCrime, setDocumentaryMode, setIsSearchOpen, setSelectedCrime, addToast]);
+  }, [documentaryMode, selectedCrime, setDocumentaryMode, setIsSearchOpen, setSelectedCrime, addToast, lastTransaction]);
 
   const clearFilters = () => {
     useAppStore.setState((state) => ({

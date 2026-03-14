@@ -29,6 +29,21 @@ export const TransactionReceipt = ({
     }
   }, [isVisible, transaction, onClose]);
 
+  // Handle ESC key to close modal
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEsc, true);
+    return () => window.removeEventListener('keydown', handleEsc, true);
+  }, [isVisible, onClose]);
+
   if (!transaction) return null;
 
   const explorerUrl = `https://testnet.monadexplorer.com/tx/${transaction.hash}`;
