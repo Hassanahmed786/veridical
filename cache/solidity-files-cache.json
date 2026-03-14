@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "E:\\hackathon stuff\\hack_crypto\\Crime Doc\\src\\contracts\\VeridicalRegistry.sol": {
+      "lastModificationDate": 1773467556393,
+      "contentHash": "87a2407e8835ca9c8021fec8c373eacc",
+      "sourceName": "src/contracts/VeridicalRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "VeridicalRegistry"
+      ]
+    }
+  }
+}
