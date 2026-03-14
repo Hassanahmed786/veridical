@@ -1,0 +1,54 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Check TypeScript
+      run: npx tsc --noEmit
+    
+    - name: Build production
+      run: npm run build
+    
+    - name: Verify dist folder
+      run: |
+        if [ ! -d "dist" ]; then
+          echo "❌ Build failed: dist folder not created"
+          exit 1
+        fi
+        echo "✅ Build successful: dist folder created"
+        ls -la dist/
+    
+    - name: Check build size
+      run: |
+        SIZE=$(du -sh dist/ | cut -f1)
+        echo "📦 Build size: $SIZE"
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist-${{ matrix.node-version }}
+        path: dist/
+        retention-days: 5
