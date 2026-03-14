@@ -102,6 +102,18 @@ const CrimeDetailPanel = () => {
     }
   }, [lastTransaction]);
 
+  // Auto-clear transaction after modal closes
+  useEffect(() => {
+    if (!showTransactionReceipt && lastTransaction) {
+      // Give animation time to finish
+      const timer = setTimeout(() => {
+        const store = useAppStore.getState();
+        store.setLastTransaction(null);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [showTransactionReceipt, lastTransaction]);
+
   const handleSubmit = async () => {
     if (!selectedCrime || !recordHash || isLoading) return;
     try {

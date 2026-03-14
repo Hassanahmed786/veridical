@@ -19,14 +19,26 @@ export const TransactionReceipt = ({
   useEffect(() => {
     if (!isVisible || !transaction) return;
 
+    let timer1: ReturnType<typeof setTimeout>;
+    let timer2: ReturnType<typeof setTimeout>;
+
     // Auto-close after 8 seconds for successful transactions
     if (transaction.status === 'success') {
-      const timer = setTimeout(() => {
+      timer1 = setTimeout(() => {
         setAutoClose(true);
         onClose();
       }, 8000);
-      return () => clearTimeout(timer);
     }
+
+    // Failsafe: Force close after 12 seconds no matter what
+    timer2 = setTimeout(() => {
+      onClose();
+    }, 12000);
+
+    return () => {
+      if (timer1) clearTimeout(timer1);
+      if (timer2) clearTimeout(timer2);
+    };
   }, [isVisible, transaction, onClose]);
 
   // Handle ESC key to close modal
@@ -44,7 +56,8 @@ export const TransactionReceipt = ({
     return () => window.removeEventListener('keydown', handleEsc, true);
   }, [isVisible, onClose]);
 
-  if (!transaction) return null;
+  // Only render if both conditions are met
+  if (!isVisible || !transaction) return null;
 
   const explorerUrl = `https://testnet.monadexplorer.com/tx/${transaction.hash}`;
   const gasUsedNum = BigInt(transaction.gasUsed);
@@ -53,7 +66,7 @@ export const TransactionReceipt = ({
 
   return (
     <AnimatePresence mode="wait">
-      {isVisible && (
+      {isVisible && transaction && (
         <motion.div
           className="tx-receipt-overlay"
           initial={{ opacity: 0 }}
